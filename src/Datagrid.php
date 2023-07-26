@@ -30,6 +30,9 @@ class Datagrid extends UI\Control
 	/** @var array of callbacks: function(Datagrid) */
 	public $onRender = [];
 
+	/** @var array of callbacks: function(Datagrid, Form) */
+	public $onFormProcessed = [];
+
 	/** @persistent */
 	public $filter = [];
 
@@ -92,6 +95,12 @@ class Datagrid extends UI\Control
 
 	/** @var array */
 	protected $cellsTemplates = [];
+
+	/** @var bool */
+	protected $useAjax = true;
+
+	/** @var string */
+	protected $filterFormHttpMethod = 'post';
 
 
 	/**
@@ -241,6 +250,17 @@ class Datagrid extends UI\Control
 		return $templates;
 	}
 
+	public function useAjax($use) {
+		$this->useAjax = (bool) $use;
+	}
+
+	/**
+	 * @param string $filterFormHttpMethod
+	 */
+	public function setFilterFormHttpMethod($filterFormHttpMethod)
+	{
+		$this->filterFormHttpMethod = $filterFormHttpMethod;
+	}
 
 	public function setTranslator(ITranslator $translator)
 	{
@@ -280,6 +300,7 @@ class Datagrid extends UI\Control
 		$this->template->paginator = $this->paginator;
 		$this->template->sendOnlyRowParentSnippet = $this->sendOnlyRowParentSnippet;
 		$this->template->cellsTemplates = $this->getCellsTemplates();
+		$this->template->useAjax = $this->useAjax;
 		$this->template->showFilterCancel = $this->filterDataSource != $this->filterDefaults; // @ intentionaly
 		$this->template->setFile(__DIR__ . '/Datagrid.latte');
 
@@ -325,6 +346,7 @@ class Datagrid extends UI\Control
 
 
 	/*******************************************************************************/
+
 	protected function validateParent(Nette\ComponentModel\IContainer $parent): void
 	{
 		parent::validateParent($parent);
@@ -332,6 +354,7 @@ class Datagrid extends UI\Control
 			$this->filterDataSource = $this->filter;
 		});
 	}
+
 
 	protected function getData($key = null)
 	{
@@ -428,6 +451,7 @@ class Datagrid extends UI\Control
 	public function createComponentForm()
 	{
 		$form = new UI\Form;
+		$form->setMethod($this->filterFormHttpMethod);
 
 		if ($this->filterFormFactory) {
 			$form['filter'] = call_user_func($this->filterFormFactory);
@@ -445,7 +469,8 @@ class Datagrid extends UI\Control
 		}
 
 		if ($this->editFormFactory && ($this->editRowKey !== null || !empty($_POST['edit']))) {
-			$data = $this->editRowKey !== null && empty($_POST) ? $this->getData($this->editRowKey) : null;
+			$httpData = $this->filterFormHttpMethod === 'get' ? $_GET : $_POST;
+			$data = $this->editRowKey !== null && empty($httpData) ? $this->getData($this->editRowKey) : null;
 			$form['edit'] = call_user_func($this->editFormFactory, $data);
 
 			if (!isset($form['edit']['save']))
@@ -537,6 +562,11 @@ class Datagrid extends UI\Control
 				}
 			}
 		}
+
+		$this->onFormProcessed(
+			$this,
+			$form
+		);
 
 		if (!$this->presenter->isAjax() && $allowRedirect) {
 			$this->redirect('this');

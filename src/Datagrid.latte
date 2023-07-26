@@ -16,12 +16,12 @@
 	}
 {/foreach}
 
-{form form class => 'ajax'}
+{form form class => $useAjax ? 'ajax' : ''}
 
 {php
 	$hasActionsColumn =
 		(bool) $control->getEditFormFactory() /* we may render only one row so the form[filter] may not be created */
-		|| $this->hasBlock("row-actions");
+		|| isset($this->blockQueue["row-actions"]);
 	$hasGlobalActionsColumn = isset($form['actions']);
 
 	foreach ($_templates as $_template):
@@ -44,7 +44,7 @@
 			{foreach $data as $row}
 				{var $primary = $control->getter($row, $rowPrimaryKey)}
 				{var $rowId = $this->global->snippetDriver->getHtmlId("rows-$primary")}
-				{include #row row => $row, rowId => $rowId}
+				{include #row row => $row, rowId => $rowId, iterator => $iterator}
 			{/foreach}
 		{else}
 			{ifset #empty-result}{include #empty-result}{/ifset}

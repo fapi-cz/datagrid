@@ -44,7 +44,7 @@
 		{foreach $columns as $column}
 			<th class="grid-col-{$column->name}">
 				{if $column->canSort()}
-					<a href="{link sort! orderColumn => $column->name, orderType => $column->getNewState()}" class="ajax">{$column->label}</a>
+					<a href="{link sort! orderColumn => $column->name, orderType => $column->getNewState()}" n:class="$useAjax ? 'ajax'">{$column->label}</a>
 					{if $column->isAsc()}
 						<span class="grid-sort-symbol grid-sort-symbol-asc"><em>&#9650;</em></span>
 					{elseif $column->isDesc()}
@@ -83,7 +83,7 @@
 		{foreach $columns as $column}
 			<th class="grid-col-{$column->name}">
 				{if isset($form['filter'][$column->name])}
-					{ifset #col-filter-{$column->name}}
+					{ifset #"col-filter-{$column->name}"}
 						{include #"col-filter-{$column->name}" column => $column}
 					{else}
 						{include #col-filter column => $column}
@@ -104,7 +104,7 @@
 {/define}
 
 {define row-actions-edit-link}
-	<a href="{link edit! $primary}" class="ajax" data-datagrid-edit>{$control->translate(Edit)}</a>
+	<a href="{link edit! $primary}" n:class="$useAjax ? 'ajax'" data-datagrid-edit>{$control->translate(Edit)}</a>
 {/define}
 
 {define row}
@@ -129,7 +129,7 @@
 		{var $cell = $control->getter($row, $column->name, FALSE)}
 		{if $editRow && $column->name != $rowPrimaryKey && (isset($form['edit'][$column->name]) || isset($this->blockQueue["cell-edit-{$column->name}"]))}
 			<td class="grid-col-{$column->name}">
-				{ifset #cell-edit-{$column->name}}
+				{ifset #"cell-edit-$column->name"}
 					{include #"cell-edit-{$column->name}" form => $form, column => $column, row => $row}
 				{else}
 					{formContainer edit}
@@ -141,11 +141,11 @@
 				{/ifset}
 			</td>
 		{else}
-			{ifset #col-{$column->name}}
+			{ifset #"col-$column->name"}
 				{include #"col-{$column->name}" row => $row, cell => $cell, iterator => $iterator}
 			{else}
 				<td class="grid-col-{$column->name}">
-					{ifset #cell-{$column->name}}
+					{ifset #"cell-$column->name"}
 						{include #"cell-{$column->name}" row => $row, cell => $cell, iterator => $iterator}
 					{else}
 						{$cell}
@@ -162,7 +162,7 @@
 				{include #row-actions-edit}
 			{/formContainer}
 		{else}
-			{ifset #row-actions}
+			{ifset #"row-actions"}
 				{include #row-actions row => $row, primary => $primary}
 			{elseif $control->getEditFormFactory()}
 				{include #row-actions-edit-link row => $row, primary => $primary}
@@ -179,8 +179,8 @@
 			<span>« {$control->translate(First)}</span>
 			<span>« {$control->translate(Previous)}</span>
 		{else}
-			<a href="{link paginate!, 'page' => 1}" class="ajax">« {$control->translate(First)}</a>
-			<a href="{link paginate!, 'page' => $paginator->page - 1}" class="ajax">« {$control->translate(Previous)}</a>
+			<a href="{link paginate!, 'page' => 1}" n:class="$useAjax ? 'ajax'">« {$control->translate(First)}</a>
+			<a href="{link paginate!, 'page' => $paginator->page - 1}" n:class="$useAjax ? 'ajax'">« {$control->translate(Previous)}</a>
 		{/if}
 
 		<span>
@@ -191,8 +191,8 @@
 			<span>{$control->translate(Next)} »</span>
 			<span>{$control->translate(Last)} »</span>
 		{else}
-			<a href="{link paginate!, 'page' => $paginator->page + 1}" class="ajax">{$control->translate(Next)} »</a>
-			<a href="{link paginate!, 'page' => $paginator->pageCount}" class="ajax">{$control->translate(Last)} »</a>
+			<a href="{link paginate!, 'page' => $paginator->page + 1}" n:class="$useAjax ? 'ajax'">{$control->translate(Next)} »</a>
+			<a href="{link paginate!, 'page' => $paginator->pageCount}" n:class="$useAjax ? 'ajax'">{$control->translate(Last)} »</a>
 		{/if}
 	</div>
 {/define}
