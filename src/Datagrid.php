@@ -528,7 +528,7 @@ class Datagrid extends UI\Control
 
 		if (isset($form['filter'])) {
 			if ($form['filter']['filter']->isSubmittedBy()) {
-				$values = $form['filter']->getValues(true);
+				$values = $form['filter']->getValues('array');
 				unset($values['filter']);
 				$values = $this->filterFormFilter($values);
 				if ($this->paginator) {
@@ -583,9 +583,9 @@ class Datagrid extends UI\Control
 	}
 
 
-	protected function createTemplate(): UI\ITemplate
+	protected function createTemplate(?string $class = null): Template
 	{
-		$template = parent::createTemplate();
+		$template = parent::createTemplate($class);
 		if ($translator = $this->getTranslator()) {
 			$template->setTranslator($translator);
 		}
