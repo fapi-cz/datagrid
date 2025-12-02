@@ -145,7 +145,7 @@ class Datagrid extends UI\Control
 	}
 
 
-	public function setColumnGetterCallback(callable $getterCallback = null)
+	public function setColumnGetterCallback(?callable $getterCallback = null)
 	{
 		$this->columnGetterCallback = $getterCallback;
 	}
@@ -169,7 +169,7 @@ class Datagrid extends UI\Control
 	}
 
 
-	public function setEditFormFactory(callable $editFormFactory = null)
+	public function setEditFormFactory(?callable $editFormFactory = null)
 	{
 		$this->editFormFactory = $editFormFactory;
 	}
@@ -181,7 +181,7 @@ class Datagrid extends UI\Control
 	}
 
 
-	public function setEditFormCallback(callable $editFormCallback = null)
+	public function setEditFormCallback(?callable $editFormCallback = null)
 	{
 		$this->editFormCallback = $editFormCallback;
 	}
@@ -193,7 +193,7 @@ class Datagrid extends UI\Control
 	}
 
 
-	public function setFilterFormFactory(callable $filterFormFactory = null)
+	public function setFilterFormFactory(?callable $filterFormFactory = null)
 	{
 		$this->filterFormFactory = $filterFormFactory;
 	}
@@ -211,7 +211,7 @@ class Datagrid extends UI\Control
 	}
 
 
-	public function setPagination($itemsPerPage, callable $itemsCountCallback = null)
+	public function setPagination($itemsPerPage, ?callable $itemsCountCallback = null)
 	{
 		if ($itemsPerPage === false) {
 			$this->paginator = null;
@@ -328,7 +328,7 @@ class Datagrid extends UI\Control
 	}
 
 
-	public function redrawControl(string $snippet = null, $redraw = true): void
+	public function redrawControl(string? $snippet = null, $redraw = true): void
 	{
 		parent::redrawControl($snippet, $redraw);
 		if ($snippet === null || $snippet === 'rows') {
