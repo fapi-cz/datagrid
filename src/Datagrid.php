@@ -328,7 +328,7 @@ class Datagrid extends UI\Control
 	}
 
 
-	public function redrawControl(string? $snippet = null, $redraw = true): void
+	public function redrawControl(?string $snippet = null, $redraw = true): void
 	{
 		parent::redrawControl($snippet, $redraw);
 		if ($snippet === null || $snippet === 'rows') {
