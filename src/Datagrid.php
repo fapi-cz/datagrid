@@ -10,6 +10,7 @@
 namespace Nextras\Datagrid;
 
 use Nette;
+use Nette\Application\Attributes\Persistent;
 use Nette\Application\UI;
 use Nette\Bridges\ApplicationLatte\Template;
 use Nette\Forms\Container;
@@ -33,16 +34,16 @@ class Datagrid extends UI\Control
 	/** @var array of callbacks: function(Datagrid, Form) */
 	public $onFormProcessed = [];
 
-	/** @persistent */
+	#[Persistent]
 	public $filter = [];
 
-	/** @persistent */
+	#[Persistent]
 	public $orderColumn;
 
-	/** @persistent */
+	#[Persistent]
 	public $orderType = self::ORDER_ASC;
 
-	/** @persistent */
+	#[Persistent]
 	public $page = 1;
 
 	/** @var array */
