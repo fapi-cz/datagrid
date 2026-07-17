@@ -7,25 +7,14 @@
 <div class="grid" data-grid-name="{$control->getUniqueId()}">
 {snippet rows}
 
-{var $_templates = []}
 {foreach $cellsTemplates as $cellsTemplate}
-    {var $_template = $this->createTemplate($cellsTemplate, $this->params, 'includeblock')}
-    {do $_template->render()}
-    {do $_templates[] = $_template}
+	{import $cellsTemplate}
 {/foreach}
 
 {form form class => $useAjax ? 'ajax' : ''}
 
-    {var $hasActionsColumn = (bool) $control->getEditFormFactory() || isset($this->blockQueue['row-actions'])}
-    {var $hasGlobalActionsColumn = isset($form['actions'])}
-
-    {foreach $_templates as $_template}
-        {do $_template->params['hasActionsColumn'] = $hasActionsColumn}
-        {do $_template->params['hasGlobalActionsColumn'] = $hasGlobalActionsColumn}
-    {/foreach}
-
-    {do $this->params['hasActionsColumn'] = $hasActionsColumn}
-    {do $this->params['hasGlobalActionsColumn'] = $hasGlobalActionsColumn}
+	{var $hasActionsColumn = (bool) $control->getEditFormFactory() || hasBlock('row-actions')}
+	{var $hasGlobalActionsColumn = isset($form['actions'])}
 
 {include #table-open-tag}
 	{include #table-thead-open-tag}
@@ -38,7 +27,7 @@
 		{if count($data)}
 			{foreach $data as $row}
 				{var $primary = $control->getter($row, $rowPrimaryKey)}
-				{var $rowId = $this->global->snippetDriver->getHtmlId("rows-$primary")}
+				{var $rowId = $control->getSnippetId("rows-$primary")}
 				{include #row row => $row, rowId => $rowId, iterator => $iterator}
 			{/foreach}
 		{else}

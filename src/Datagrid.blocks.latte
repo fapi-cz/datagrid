@@ -108,18 +108,15 @@
 {/define}
 
 {define row}
-	<tr id={$rowId}>
+	{var $primary = $control->getter($row, $rowPrimaryKey)}
+	{var $snippetName = "rows-$primary"}
+	<tr n:snippet="$snippetName">
 		{include #row-inner row => $row}
 	</tr>
 {/define}
 
 {define row-inner}
 	{var $primary = $control->getter($row, $rowPrimaryKey)}
-
-    {if !$sendOnlyRowParentSnippet}
-        {do $this->global->snippetDriver->enter("rows-$primary", "dynamic")}
-    {/if}
-
 	{var $editRow = $editRowKey == $primary && $primary !== NULL && $editRowKey !== NULL}
 	{ifset $form[actions]}
 		<td class="grid-col-global-actions">
@@ -130,7 +127,7 @@
 	{/ifset}
 	{foreach $columns as $column}
 		{var $cell = $control->getter($row, $column->name, FALSE)}
-		{if $editRow && $column->name != $rowPrimaryKey && (isset($form['edit'][$column->name]) || isset($this->blockQueue["cell-edit-{$column->name}"]))}
+		{if $editRow && $column->name != $rowPrimaryKey && (isset($form['edit'][$column->name]) || hasBlock("cell-edit-{$column->name}"))}
 			<td class="grid-col-{$column->name}">
 				{ifset #"cell-edit-$column->name"}
 					{include #"cell-edit-{$column->name}" form => $form, column => $column, row => $row}
@@ -173,10 +170,6 @@
 		{/if}
 	</td>
 	{/if}
-
-    {if !$sendOnlyRowParentSnippet}
-        {do $this->global->snippetDriver->leave()}
-    {/if}
 
 {/define}
 
