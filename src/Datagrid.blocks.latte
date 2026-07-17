@@ -110,7 +110,11 @@
 {define row}
 	{var $primary = $control->getter($row, $rowPrimaryKey)}
 	{var $snippetName = "rows-$primary"}
-	<tr n:snippet="$snippetName">
+	{if $sendOnlyRowParentSnippet}
+		<tr id={$control->getSnippetId($snippetName)}>
+	{else}
+		<tr n:snippet="$snippetName">
+	{/if}
 		{include #row-inner row => $row, hasActionsColumn => $hasActionsColumn, hasGlobalActionsColumn => $hasGlobalActionsColumn}
 	</tr>
 {/define}
