@@ -121,7 +121,9 @@
 	{ifset $form[actions]}
 		<td class="grid-col-global-actions">
 			{formContainer actions}
-			{input items:$primary}
+				{if isset($form['actions']['items']->getItems()[$primary])}
+					{input items:$primary}
+				{/if}
 			{/formContainer}
 		</td>
 	{/ifset}
