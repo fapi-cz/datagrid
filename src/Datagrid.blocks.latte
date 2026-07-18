@@ -112,11 +112,13 @@
 	{var $snippetName = "rows-$primary"}
 	{if $sendOnlyRowParentSnippet}
 		<tr id={$control->getSnippetId($snippetName)}>
+			{include #row-inner row => $row, hasActionsColumn => $hasActionsColumn, hasGlobalActionsColumn => $hasGlobalActionsColumn}
+		</tr>
 	{else}
 		<tr n:snippet="$snippetName">
+			{include #row-inner row => $row, hasActionsColumn => $hasActionsColumn, hasGlobalActionsColumn => $hasGlobalActionsColumn}
+		</tr>
 	{/if}
-		{include #row-inner row => $row, hasActionsColumn => $hasActionsColumn, hasGlobalActionsColumn => $hasGlobalActionsColumn}
-	</tr>
 {/define}
 
 {define row-inner}
